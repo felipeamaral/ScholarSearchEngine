@@ -2,5 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="lib/javabayes-0.346.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-queryparser-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/tika-app-1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
