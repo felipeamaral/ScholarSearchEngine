@@ -26,7 +26,7 @@ public class Main {
 		QueryParser parser = new QueryParser(Version.LUCENE_40, "contents", new StandardAnalyzer(Version.LUCENE_40));
 		Query query;
 		try {
-			query = parser.parse("computer");
+			query = parser.parse("a1-sachdeva");
 		} catch (org.apache.lucene.queryparser.classic.ParseException e) {
 			e.printStackTrace();
 			return;
@@ -45,11 +45,6 @@ public class Main {
 			Document doc = reader.document(hit.doc);
 			System.out.println(doc.get("file") + "  (" + hit.score + ")");
 		}
-		
-		
-		
-		
-	
 	}
 
 }
