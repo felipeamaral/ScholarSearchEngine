@@ -3,6 +3,7 @@ import java.io.IOException;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -26,14 +27,14 @@ public class Main {
 		QueryParser parser = new QueryParser(Version.LUCENE_40, "contents", new StandardAnalyzer(Version.LUCENE_40));
 		Query query;
 		try {
-			query = parser.parse("a1-sachdeva");
+			query = parser.parse("Graph");
 		} catch (org.apache.lucene.queryparser.classic.ParseException e) {
 			e.printStackTrace();
 			return;
 		}
 		
 		int hitsPerPage = 10;
-		IndexReader reader = IndexReader.open(index);
+		IndexReader reader = DirectoryReader.open(index);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
 		searcher.search(query, collector);

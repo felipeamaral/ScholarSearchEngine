@@ -4,13 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -30,8 +29,7 @@ public class ParseIndex {
 	public static final String INDEX_DIRECTORY = "index/ramdisk/";
 	public static int writeLimit = -1;
 	
-    @SuppressWarnings("deprecation")
-	public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException{
     	
     	File docs = new File("documents");
     	File indexDir = new File(INDEX_DIRECTORY);
@@ -66,24 +64,28 @@ public class ParseIndex {
     		String fileName = file.getName();
     		
     		Document doc = new Document();
-    		doc.add(new Field("file", fileName, Store.YES, Index.NO));
+    		doc.add(new StringField("file", fileName, Store.YES));
     		
     		for(String key : metadata.names()){
     			String name = key.toLowerCase();
     			String values = metadata.get(key);
     			
+    			System.out.println("name: " + name);
+    			System.out.println("key       " + key);
+    			System.out.println("values    " + values);
+    			
     			if("keywords".equalsIgnoreCase(key)){
     				for(String keyword : values.split(",?(\\s+)")){
-    					doc.add(new Field(name, keyword, Store.YES, Index.NOT_ANALYZED));
+    					doc.add(new TextField(name, keyword, Store.YES));
     				}
     			} else if("title".equalsIgnoreCase(key)){
-    				doc.add(new Field(name, values, Store.YES, Index.ANALYZED));
-    			} else {
-    				doc.add(new Field(name, fileName, Store.YES, Index.NOT_ANALYZED));
+    				doc.add(new TextField(name, values, Store.YES));
+    			} else if("author".equalsIgnoreCase(key)){
+    				doc.add(new StringField(name, values, Store.YES));
     			}
     		}
     		
-    		doc.add(new Field("text", text, Store.NO, Index.ANALYZED));
+    		doc.add(new TextField("text", text, Store.NO));
     		writer.addDocument(doc);
     		
     		
@@ -91,7 +93,6 @@ public class ParseIndex {
     	
     	writer.commit();
     	writer.deleteUnusedFiles();
-    	
     	System.out.println(writer.maxDoc() + " documents written");
     }
 }
