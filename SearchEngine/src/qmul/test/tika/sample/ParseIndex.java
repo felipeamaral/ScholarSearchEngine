@@ -4,17 +4,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.similarities.LMSimilarity.CollectionModel;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.CollectionUtil;
 import org.apache.lucene.util.Version;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -29,6 +34,7 @@ public class ParseIndex {
 
 	public static final String INDEX_DIRECTORY = "index/ramdisk/";
 	public static int writeLimit = -1;
+	private static Set stopWords = StopAnalyzer.ENGLISH_STOP_WORDS_SET;
 
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws IOException {
@@ -38,7 +44,7 @@ public class ParseIndex {
 
 		Directory dir = FSDirectory.open(indexDir);
 
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40);
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40, (CharArraySet) stopWords);
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_40,
 				analyzer);
 		IndexWriter writer = new IndexWriter(dir, config);
