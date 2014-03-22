@@ -1,4 +1,4 @@
-package qmul.test.tika.sample;
+package qmul.tika.index;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,16 +30,18 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+import qmul.util.Utils;
+
 public class ParseIndex {
 
-	public static final String INDEX_DIRECTORY = "index/ramdisk/";
-	public static int writeLimit = -1;
+	
 	private static Set stopWords = StopAnalyzer.ENGLISH_STOP_WORDS_SET;
 
+	
 	public static void main(String[] args) throws IOException {
 		long t1 = System.currentTimeMillis();
 		File docs = new File("documents");
-		File indexDir = new File(INDEX_DIRECTORY);
+		File indexDir = new File(Utils.INDEX_DIRECTORY);
 
 		Directory dir = FSDirectory.open(indexDir);
 
@@ -51,7 +53,7 @@ public class ParseIndex {
 
 		for (File file : docs.listFiles()) {
 			Metadata metadata = new Metadata();
-			ContentHandler handler = new BodyContentHandler(writeLimit);
+			ContentHandler handler = new BodyContentHandler(Utils.writeLimit);
 			ParseContext context = new ParseContext();
 			Parser parser = new PDFParser();
 
