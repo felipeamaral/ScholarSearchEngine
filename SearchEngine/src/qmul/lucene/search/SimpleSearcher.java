@@ -1,5 +1,7 @@
 package qmul.lucene.search;
+
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -13,30 +15,30 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 import qmul.util.Utils;
 
 public class SimpleSearcher {
-
-	private void searchIndex(File indexDir, String queryStr, int maxHits)
-			throws Exception {
+	private Ranking ranking;
+	
+	private void searchIndex(File indexDir, String queryStr, int maxHits) throws IOException, ParseException{
 		// Creating the Directory and Reader.
 		Directory directory = FSDirectory.open(indexDir);
 		IndexReader reader = DirectoryReader.open(directory);
 
 		IndexSearcher searcher = new IndexSearcher(reader);
-		
+
 		Query query = handleQuery(queryStr);
-		
-		//Searching in the index with the query.
+
+		// Searching in the index with the query.
 		TopDocs topDocs = searcher.search(query, maxHits);
 
 		ScoreDoc[] hits = topDocs.scoreDocs;
 		for (int i = 0; i < hits.length; i++) {
 			int docId = hits[i].doc;
 			Document d = searcher.doc(docId);
-			System.out.println(d.get("file"));
+			//System.out.println(d.get("file"));
+			ranking.addDocument(d);
 		}
 
 		System.out.println("Found " + hits.length);
@@ -55,17 +57,15 @@ public class SimpleSearcher {
 		Query query = parser.parse(queryStr);
 		return query;
 	}
-
-	public static void main(String[] args) throws Exception {
-
-		File indexDir = new File(
-				"index/ramdisk");
-		String query = "video games";
+	
+	public String search (String userQuery) throws IOException, ParseException{
+		this.ranking = new Ranking();
+		
+		File indexDir = new File("index/ramdisk");
 		int hits = 100;
+		searchIndex(indexDir, userQuery, hits);
 
-		SimpleSearcher searcher = new SimpleSearcher();
-		searcher.searchIndex(indexDir, query, hits);
-
+		return ranking.toString();
 	}
 
 }
