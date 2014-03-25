@@ -16,10 +16,9 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.similarities.LMSimilarity.CollectionModel;
+import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.CollectionUtil;
 import org.apache.lucene.util.Version;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -35,7 +34,9 @@ import qmul.util.Utils;
 public class ParseIndex {
 
 	private static Set stopWords = StopAnalyzer.ENGLISH_STOP_WORDS_SET;
-
+	
+	
+	
 	public static void main(String[] args) throws IOException {
 		long t1 = System.currentTimeMillis();
 		File docs = new File("documents");
@@ -47,9 +48,10 @@ public class ParseIndex {
 				(CharArraySet) stopWords);
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_40,
 				analyzer);
+		config.setSimilarity(new BM25Similarity());
 		IndexWriter writer = new IndexWriter(dir, config);
 		writer.deleteAll();
-
+	
 		for (File file : docs.listFiles()) {
 			Metadata metadata = new Metadata();
 			ContentHandler handler = new BodyContentHandler(Utils.writeLimit);
