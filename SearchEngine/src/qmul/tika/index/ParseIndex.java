@@ -34,10 +34,8 @@ import qmul.util.Utils;
 
 public class ParseIndex {
 
-	
 	private static Set stopWords = StopAnalyzer.ENGLISH_STOP_WORDS_SET;
 
-	
 	public static void main(String[] args) throws IOException {
 		long t1 = System.currentTimeMillis();
 		File docs = new File("documents");
@@ -45,7 +43,8 @@ public class ParseIndex {
 
 		Directory dir = FSDirectory.open(indexDir);
 
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40, (CharArraySet) stopWords);
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40,
+				(CharArraySet) stopWords);
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_40,
 				analyzer);
 		IndexWriter writer = new IndexWriter(dir, config);
@@ -80,14 +79,19 @@ public class ParseIndex {
 			if (values != null) {
 				System.out.println("Keywords values:    " + values);
 				for (String keyword : values.split(",?(\\s+)")) {
-					doc.add(new TextField("keywords", keyword, Store.YES));
+					TextField field = new TextField("keywords", keyword,
+							Store.YES);
+					field.setBoost(5);
+					doc.add(field);
 				}
 			}
 
 			values = metadata.get("title");
 			if (values != null) {
 				System.out.println(" Title value:    " + values);
-				doc.add(new TextField("title", values, Store.YES));
+				TextField field = new TextField("title", values, Store.YES);
+				field.setBoost(5);
+				doc.add(field);
 			}
 
 			values = metadata.get("Author");
