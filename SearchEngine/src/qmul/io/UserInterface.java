@@ -7,12 +7,18 @@ import java.io.InputStreamReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import qmul.lucene.search.SimpleSearcher;
+import qmul.util.Utils;
 
+/**
+ * @author Felipe Amaral, Mateus Gondim and Vanessa Gomes
+ *
+ * Project Interface
+ *
+ */
 public class UserInterface {
-	public static final String START_MESSAGE = "Welcome! Type your subject and we will search in our Computer Science articles.";
-
+	
 	public static void main(String[] args) throws IOException, ParseException {
-		System.out.println(START_MESSAGE);
+		System.out.println(Utils.START_MESSAGE);
 		while (true) {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					System.in));
