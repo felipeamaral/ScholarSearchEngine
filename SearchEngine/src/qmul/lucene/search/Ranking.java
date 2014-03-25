@@ -4,7 +4,14 @@ import java.util.ArrayList;
 
 import org.apache.lucene.document.Document;
 
+/**
+ * @author Felipe Amaral, Mateus Gondim and Vanessa Gomes
+ * 
+ * Used to print the results on the class UserInterface
+ *
+ */
 public class Ranking {
+	
 	private ArrayList<Document> ranking;
 	
 	public Ranking() {

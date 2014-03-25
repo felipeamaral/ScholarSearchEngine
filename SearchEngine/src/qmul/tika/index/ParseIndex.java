@@ -36,7 +36,6 @@ public class ParseIndex {
 	private static Set stopWords = StopAnalyzer.ENGLISH_STOP_WORDS_SET;
 	
 	
-	
 	public static void main(String[] args) throws IOException {
 		long t1 = System.currentTimeMillis();
 		File docs = new File("documents");
