@@ -9,14 +9,13 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 import qmul.util.Utils;
 
@@ -30,9 +29,9 @@ public class SimpleSearcher {
 		IndexReader reader = DirectoryReader.open(directory);
 
 		IndexSearcher searcher = new IndexSearcher(reader);
+		searcher.setSimilarity(new BM25Similarity());
 
 		Query query = handleQuery(queryStr);
-
 		// Searching in the index with the query.
 		TopDocs topDocs = searcher.search(query, maxHits);
 
@@ -45,7 +44,6 @@ public class SimpleSearcher {
 		}
 
 		System.out.println("Found " + hits.length);
-
 	}
 
 	/**
@@ -66,7 +64,7 @@ public class SimpleSearcher {
 		this.ranking = new Ranking();
 
 		File indexDir = new File("index/ramdisk");
-		int hits = 100;
+		int hits = 10;
 		searchIndex(indexDir, userQuery, hits);
 
 		return ranking.toString();

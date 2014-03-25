@@ -13,18 +13,20 @@ public class UserInterface {
 
 	public static void main(String[] args) throws IOException, ParseException {
 		System.out.println(START_MESSAGE);
+		while (true) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					System.in));
+			System.out
+					.println("\nType your subject and press Enter/Key to search. Type \"Quit\" to exit.");
+			String userQuery = reader.readLine();
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
-		System.out.println("Type your subject and press Enter/Key to search:");
-		String userQuery = reader.readLine();
+				System.out.println("Results:");
 
-		System.out.println("Results:");
-		// TO DO: SEARCH HERE
+				SimpleSearcher searcher = new SimpleSearcher();
+				String results = searcher.search(userQuery);
 
-		SimpleSearcher searcher = new SimpleSearcher();
-		String results = searcher.search(userQuery);
-
-		System.out.println(results);
+				System.out.println(results);
+			
+		}
 	}
 }
